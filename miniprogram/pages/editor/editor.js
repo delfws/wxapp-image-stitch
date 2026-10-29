@@ -35,7 +35,7 @@ Page({
     let capsuleTop = 20;
     let capsuleHeight = 32;
     try {
-      const info = wx.getSystemInfoSync();
+      const info = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync();
       const rect = wx.getMenuButtonBoundingClientRect();
       if (rect && rect.height) {
         capsuleTop = rect.top;
@@ -46,7 +46,11 @@ Page({
     } catch (e) {
       /* 忽略 */
     }
-    this._winH = (wx.getSystemInfoSync ? wx.getSystemInfoSync().windowHeight : 0) || 667;
+    try {
+      this._winH = wx.getWindowInfo().windowHeight || 667;
+    } catch (e) {
+      this._winH = 667;
+    }
     this.setData({ capsuleTop, capsuleHeight });
     // 进入即选图
     this.pickImages(true);

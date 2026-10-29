@@ -30,7 +30,8 @@ Page({
         capsuleTop = rect.top;
         capsuleHeight = rect.height;
       } else {
-        capsuleTop = (wx.getSystemInfoSync().statusBarHeight || 20) + 6;
+        const info = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync();
+        capsuleTop = (info.statusBarHeight || 20) + 6;
       }
     } catch (e) {
       /* 忽略 */

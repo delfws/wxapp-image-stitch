@@ -10,7 +10,7 @@ Page({
 
   onLoad() {
     try {
-      const info = wx.getSystemInfoSync();
+      const info = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync();
       this.setData({ statusBarHeight: info.statusBarHeight || 20 });
     } catch (e) {
       /* 忽略 */
