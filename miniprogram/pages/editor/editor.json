@@ -1,0 +1,7 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "layout-picker": "/components/layout-picker/layout-picker",
+    "color-palette": "/components/color-palette/color-palette"
+  }
+}

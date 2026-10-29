@@ -1,0 +1,14 @@
+<scroll-view class="palette-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+  <view class="palette-row">
+    <view
+      wx:for="{{colors}}"
+      wx:key="value"
+      class="swatch {{value === item.value ? 'swatch-active' : ''}}"
+      data-value="{{item.value}}"
+      bindtap="onTap"
+    >
+      <view class="swatch-dot" style="background:{{item.value}};"></view>
+      <view class="swatch-name">{{item.name}}</view>
+    </view>
+  </view>
+</scroll-view>

@@ -1,0 +1,21 @@
+<view class="hero" style="padding-top:{{statusBarHeight + 80}}px">
+  <view class="hero-badge">
+    <image class="hero-logo" src="/assets/logo.png" mode="aspectFit" />
+  </view>
+  <view class="hero-title">拼图</view>
+  <view class="hero-sub">把你的照片，拼成想要的样子</view>
+</view>
+
+<view class="steps">
+  <view class="step" wx:for="{{steps}}" wx:key="title">
+    <view class="step-icon">{{item.icon}}</view>
+    <view class="step-body">
+      <view class="step-title">{{item.title}}</view>
+      <view class="step-desc">{{item.desc}}</view>
+    </view>
+  </view>
+</view>
+
+<view class="start-area">
+  <button class="btn-primary start-btn" bindtap="onStart">开始拼图</button>
+</view>

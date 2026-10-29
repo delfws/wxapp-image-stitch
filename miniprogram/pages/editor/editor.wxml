@@ -1,0 +1,191 @@
+<view class="editor">
+  <!-- 固定顶部导航（不随内容滚动，含状态栏留白，玻璃背景承接滚过内容） -->
+  <view class="editor-header">
+    <!-- 状态栏留白（高度 = 系统胶囊 top） -->
+    <view class="topbar-spacer" style="height:{{capsuleTop}}px"></view>
+
+    <!-- 顶部导航条（高度 = 系统胶囊 height，内容与胶囊垂直居中对齐） -->
+    <view class="topbar" style="height:{{capsuleHeight}}px">
+      <view class="topbar-back" bindtap="goBack"></view>
+      <view class="topbar-title">{{style === 'stitch' ? (stitchDir === 'row' ? '横排拼接 · ' + images.length + '张' : '竖排拼接 · ' + images.length + '张') : (images.length > 0 && layouts[currentLayout] ? layouts[currentLayout].name + ' · ' + images.length + '张' : '拼图')}}</view>
+    </view>
+  </view>
+  <!-- 占位：把后续内容推到固定导航之下（含导航条下内边距） -->
+  <view class="header-placeholder" style="height:{{capsuleTop + capsuleHeight + headerPad}}px"></view>
+
+  <!-- 操作导航（浮动玻璃胶囊） -->
+  <view class="nav">
+    <view class="nav-btn" bindtap="onRepick">重选图片</view>
+    <view class="nav-btn nav-primary" bindtap="onExport">预览导出</view>
+  </view>
+
+  <!-- 空态 -->
+  <view class="empty" wx:if="{{images.length === 0}}">
+    <view class="empty-icon">🧩</view>
+    <view class="empty-title">还没有图片</view>
+    <view class="empty-desc">从相册选择 2~9 张照片开始拼图</view>
+    <button class="btn-primary empty-btn" bindtap="onRepick">选择图片</button>
+  </view>
+
+  <block wx:else>
+    <!-- 画布区（自然文档流：页面整体可滚动，画布按宽度撑满、高度随比例） -->
+    <view class="canvas-area">
+      <view class="canvas-box" style="width:{{canvasW}}px;height:{{canvasH}}px;background:{{gapColor}};">
+        <!-- 图片格（平铺渲染） -->
+        <view
+          wx:for="{{cells}}"
+          wx:key="leafIndex"
+          class="cell {{drag && drag.src === index ? 'cell-src' : ''}} {{drag && drag.hit === index && drag.hit !== drag.src ? 'cell-hit' : ''}}"
+          style="left:{{item.left}}px;top:{{item.top}}px;width:{{item.width}}px;height:{{item.height}}px;"
+          data-leafindex="{{index}}"
+          bindtouchstart="onCellTouchStart"
+          catchtouchmove="onCellTouchMove"
+          catchtouchend="onCellTouchEnd"
+          catchtouchcancel="onCellTouchEnd"
+          bindtap="onCellTap"
+        >
+          <image
+            class="cell-pan-img"
+            src="{{item.path}}"
+            mode="scaleToFill"
+            style="left:{{item.imgLeft}}px;top:{{item.imgTop}}px;width:{{item.imgW}}px;height:{{item.imgH}}px;"
+          />
+        </view>
+        <!-- 分割线（默认隐藏，拖动时显示对应线；视觉线与热区为兄弟节点，坐标均相对画布容器） -->
+        <block wx:for="{{dividers}}" wx:key="key">
+          <view
+            class="divider-line {{dividerActive === item.key ? 'line-show' : ''}}"
+            style="left:{{item.lineLeft}}px;top:{{item.lineTop}}px;width:{{item.lineW}}px;height:{{item.lineH}}px;"
+          ></view>
+          <view
+            class="divider-hit"
+            style="left:{{item.hitLeft}}px;top:{{item.hitTop}}px;width:{{item.hitW}}px;height:{{item.hitH}}px;"
+            data-nodeid="{{item.nodeId}}"
+            data-dindex="{{item.index}}"
+            catchtouchstart="onDividerStart"
+            catchtouchmove="onDividerMove"
+            catchtouchend="onDividerEnd"
+            catchtouchcancel="onDividerEnd"
+          ></view>
+        </block>
+      </view>
+      <view class="canvas-tip">{{style === 'stitch' ? '当前：拖动图片调整顺序' : (editMode === 'pan' ? '当前：拖动图片调整显示位置' : '当前：拖动图片到另一格互换')}}</view>
+    </view>
+
+      <!-- 拖拽浮层（内层图带平移量，与源格显示一致；fixed 定位相对视口，不随滚动移动） -->
+      <view
+        wx:if="{{drag}}"
+        class="float-img {{drag.fading ? 'float-fade' : ''}}"
+        style="left:{{drag.x - drag.w / 2}}px;top:{{drag.y - drag.h / 2}}px;width:{{drag.w}}px;height:{{drag.h}}px;"
+      >
+        <image
+          class="cell-pan-img"
+          src="{{drag.path}}"
+          mode="scaleToFill"
+          style="left:{{drag.imgLeft}}px;top:{{drag.imgTop}}px;width:{{drag.imgW}}px;height:{{drag.imgH}}px;"
+        />
+      </view>
+
+      <!-- 编辑模式切换（简单拼接下不支持平移，仅换序） -->
+    <view class="mode-row" wx:if="{{style !== 'stitch'}}">
+      <view class="mode-chip {{editMode === 'pan' ? 'mode-on' : ''}}" data-mode="pan" bindtap="onModeTap">调整位置</view>
+      <view class="mode-chip {{editMode === 'swap' ? 'mode-on' : ''}}" data-mode="swap" bindtap="onModeTap">交换位置</view>
+      <view class="mode-hint">单击图片可替换</view>
+    </view>
+    <view class="mode-row" wx:else>
+      <view class="mode-hint">拖动图片可调整拼接顺序 · 单击图片可替换</view>
+    </view>
+
+    <!-- 外框比例（简单拼接的比例由内容决定，隐藏） -->
+    <view class="aspect-row" wx:if="{{style !== 'stitch'}}">
+      <view class="aspect-label">画布</view>
+      <view
+        wx:for="{{aspects}}"
+        wx:key="key"
+        class="aspect-chip {{aspectKey === item.key ? 'chip-active' : ''}}"
+        data-key="{{item.key}}"
+        bindtap="onAspectTap"
+      >{{item.label}}</view>
+    </view>
+
+    <!-- 底部工具栏（安全区由 .editor 的 padding-bottom 统一避让） -->
+    <view class="toolbar">
+      <view class="tab-row">
+        <view class="tab {{activeTab === 0 ? 'tab-active' : ''}}" data-tab="{{0}}" bindtap="onTabTap">布局</view>
+        <view class="tab {{activeTab === 1 ? 'tab-active' : ''}}" data-tab="{{1}}" bindtap="onTabTap">间距</view>
+        <view class="tab {{activeTab === 2 ? 'tab-active' : ''}}" data-tab="{{2}}" bindtap="onTabTap">图片</view>
+      </view>
+
+      <view class="panel" wx:if="{{activeTab === 0}}">
+        <!-- 拼接方式切换 -->
+        <view class="style-row">
+          <view class="style-chip {{style === 'template' ? 'style-on' : ''}}" data-style="template" bindtap="onStyleTap">模板拼接</view>
+          <view class="style-chip {{style === 'stitch' ? 'style-on' : ''}}" data-style="stitch" bindtap="onStyleTap">简单拼接</view>
+        </view>
+
+        <!-- 模板拼接：预设布局选择器 -->
+        <block wx:if="{{style !== 'stitch'}}">
+          <layout-picker layouts="{{layouts}}" current="{{currentLayout}}" bindselect="onLayoutSelect" />
+        </block>
+
+        <!-- 简单拼接：方向选择 -->
+        <view wx:else class="dir-row">
+          <view class="dir-card {{stitchDir === 'row' ? 'dir-on' : ''}}" data-dir="row" bindtap="onDirTap">
+            <view class="dir-demo dir-demo-row">
+              <view class="dir-cell" style="width:34%;"></view>
+              <view class="dir-cell" style="width:26%;"></view>
+              <view class="dir-cell" style="width:22%;"></view>
+            </view>
+            <text>横排拼接</text>
+            <text class="dir-sub">高度一致 · 宽度自适应</text>
+          </view>
+          <view class="dir-card {{stitchDir === 'col' ? 'dir-on' : ''}}" data-dir="col" bindtap="onDirTap">
+            <view class="dir-demo dir-demo-col">
+              <view class="dir-cell" style="height:34%;"></view>
+              <view class="dir-cell" style="height:26%;"></view>
+              <view class="dir-cell" style="height:22%;"></view>
+            </view>
+            <text>竖排拼接</text>
+            <text class="dir-sub">宽度一致 · 高度自适应</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="panel" wx:elif="{{activeTab === 1}}">
+        <view class="panel-row">
+          <text class="panel-label">间距</text>
+          <slider
+            class="gap-slider"
+            min="0"
+            max="40"
+            step="1"
+            value="{{gap}}"
+            activeColor="#4a7cf7"
+            block-size="20"
+            bindchanging="onGapChanging"
+            bindchange="onGapChanging"
+          />
+          <text class="panel-value">{{gap}}px</text>
+        </view>
+        <view class="panel-row">
+          <text class="panel-label">颜色</text>
+          <view class="palette-wrap">
+            <color-palette colors="{{gapColors}}" value="{{gapColor}}" bindchange="onGapColorChange" />
+          </view>
+        </view>
+      </view>
+
+      <view class="panel" wx:elif="{{activeTab === 2}}">
+        <scroll-view class="img-panel-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+          <view class="img-panel-row">
+            <view wx:for="{{images}}" wx:key="index" class="img-thumb" data-index="{{index}}" bindtap="onImageThumbTap">
+              <image src="{{item.path}}" mode="aspectFill" />
+              <view wx:if="{{images.length > 2}}" class="img-thumb-del" data-index="{{index}}" catchtap="onDeleteImage">✕</view>
+            </view>
+            <view wx:if="{{images.length < maxCount}}" class="img-add" bindtap="onAddImages">＋</view>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+  </block>
+</view>

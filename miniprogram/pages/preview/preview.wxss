@@ -1,0 +1,164 @@
+.preview {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  box-sizing: border-box;
+  padding: 0 20rpx;
+  /* 底部避让 Home 指示条（安全区），与编辑页统一 */
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+  /* 透明，透出 app.wxss 的液态玻璃光晕背景（与首页/编辑页一致） */
+  background: transparent;
+}
+
+/* ===== 固定顶部导航（与编辑页完全一致：玻璃表面，内容从其下方滚过） ===== */
+.editor-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 0 20rpx 10px;
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.2) 40%, rgba(255, 255, 255, 0.12) 62%, rgba(255, 255, 255, 0.45) 100%),
+    rgba(245, 247, 255, 0.4);
+  backdrop-filter: blur(44rpx) saturate(220%);
+  -webkit-backdrop-filter: blur(44rpx) saturate(220%);
+  box-shadow:
+    inset 0 -1rpx 0 rgba(255, 255, 255, 0.6),
+    inset 0 -2rpx 6rpx rgba(31, 38, 135, 0.06);
+}
+
+/* 固定导航的占位（等高于状态栏留白 + 导航条 + 下内边距） */
+.header-placeholder {
+  flex-shrink: 0;
+}
+
+.topbar-spacer {
+  /* 透明占位 */
+}
+
+.topbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.topbar-back {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.25) 55%, rgba(255, 255, 255, 0.6) 100%),
+    rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(24rpx) saturate(200%);
+  -webkit-backdrop-filter: blur(24rpx) saturate(200%);
+  border: 1rpx solid rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 6rpx 20rpx rgba(31, 38, 135, 0.12),
+    inset 0 1rpx 0 rgba(255, 255, 255, 1),
+    inset 0 -1rpx 0 rgba(255, 255, 255, 0.3);
+}
+
+/* CSS 边框箭头：旋转方块，几何居中，不依赖字形 */
+.topbar-back::after {
+  content: "";
+  width: 20rpx;
+  height: 20rpx;
+  border-top: 5rpx solid #4a6cf7;
+  border-left: 5rpx solid #4a6cf7;
+  transform: rotate(-45deg);
+  margin-left: 6rpx; /* 旋转后视觉重心右偏，左移补偿使箭头居中 */
+}
+
+.topbar-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1a1a2e;
+  letter-spacing: 2rpx;
+  pointer-events: none;
+}
+
+/* ===== 预览舞台 ===== */
+.preview-stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30rpx;
+}
+
+.result-img {
+  /* 尺寸由 JS 按图片实际宽高比计算（dispW/dispH），贴合预览图真实形状 */
+  border-radius: 24rpx;
+  box-shadow:
+    0 24rpx 64rpx rgba(31, 38, 135, 0.18),
+    0 0 0 1rpx rgba(255, 255, 255, 0.6),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.15);
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #5a607a;
+  font-size: 26rpx;
+}
+
+.loading-dot {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5b8cff, #8a6cff);
+  margin-bottom: 20rpx;
+  box-shadow: 0 0 16rpx rgba(91, 140, 255, 0.7);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+.preview-meta {
+  text-align: center;
+  color: #7a82a0;
+  font-size: 22rpx;
+  padding-bottom: 16rpx;
+}
+
+/* ===== 底部操作（保存按钮居中） ===== */
+.preview-actions {
+  display: flex;
+  justify-content: center;
+  padding: 10rpx 12rpx 30rpx;
+}
+
+.action-btn {
+  width: 420rpx;
+  margin: 0;
+}
+
+/* ===== 底部操作（保存按钮居中） ===== */
+.export-canvas {
+  position: fixed;
+  left: 9999px;
+  top: 0;
+  width: 375px;
+  height: 375px;
+}

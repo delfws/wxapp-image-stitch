@@ -1,0 +1,46 @@
+<view class="preview">
+  <!-- 固定顶部导航（与编辑页一致：不随内容滚动，玻璃背景，含状态栏留白） -->
+  <view class="editor-header">
+    <!-- 状态栏留白（高度 = 系统胶囊 top） -->
+    <view class="topbar-spacer" style="height:{{capsuleTop}}px"></view>
+
+    <!-- 顶部导航条（高度 = 系统胶囊 height，内容与胶囊垂直居中对齐） -->
+    <view class="topbar" style="height:{{capsuleHeight}}px">
+      <view class="topbar-back" bindtap="goBack"></view>
+      <view class="topbar-title">预览</view>
+    </view>
+  </view>
+  <!-- 占位：把内容推到固定导航之下（含导航条下内边距） -->
+  <view class="header-placeholder" style="height:{{capsuleTop + capsuleHeight + headerPad}}px"></view>
+
+  <view class="preview-stage">
+    <image
+      wx:if="{{resultPath}}"
+      class="result-img"
+      src="{{resultPath}}"
+      mode="aspectFill"
+      show-menu-by-longpress="{{true}}"
+      style="width:{{dispW}}px;height:{{dispH}}px;"
+    />
+    <view wx:elif="{{rendering}}" class="loading">
+      <view class="loading-dot"></view>
+      <text>正在生成高清拼图…</text>
+    </view>
+    <view wx:else class="loading">
+      <text>渲染失败，请返回重试</text>
+    </view>
+  </view>
+
+  <view class="preview-meta" wx:if="{{resultPath}}">{{W}} × {{H}} px · 长按图片也可保存</view>
+
+  <view class="preview-actions">
+    <button
+      class="btn-primary action-btn"
+      bindtap="onSave"
+      disabled="{{!resultPath || saving}}"
+    >{{saving ? "保存中…" : "保存到相册"}}</button>
+  </view>
+
+  <!-- 离屏导出画布：css 固定小尺寸（不超屏），缓冲区尺寸由 export.js 按导出分辨率设置 -->
+  <canvas type="2d" id="exportCanvas" class="export-canvas"></canvas>
+</view>

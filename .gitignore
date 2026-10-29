@@ -1,0 +1,14 @@
+# 工作区本地数据
+.workbuddy/
+
+# 依赖与日志
+node_modules/
+*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 开发者工具/编辑器
+.idea/
+.vscode/

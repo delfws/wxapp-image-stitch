@@ -1,0 +1,39 @@
+.palette-scroll {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.palette-row {
+  display: inline-flex;
+  padding: 8rpx 12rpx;
+}
+
+.swatch {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 14rpx;
+}
+
+.swatch-dot {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  border: 4rpx solid #ffffff;
+  box-shadow: 0 0 0 2rpx #d9dbe2;
+}
+
+.swatch-active .swatch-dot {
+  box-shadow: 0 0 0 4rpx #4a7cf7;
+}
+
+.swatch-name {
+  margin-top: 8rpx;
+  font-size: 20rpx;
+  color: #8a909c;
+}
+
+.swatch-active .swatch-name {
+  color: #4a7cf7;
+  font-weight: 600;
+}
