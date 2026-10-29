@@ -27,8 +27,12 @@
 }
 
 .thumb-canvas {
+  /* 统一固定方框：所有缩略图画布宽高一致（尺寸与 JS 中 THUMB_BOX 同步） */
+  width: 72px;
+  height: 72px;
   position: relative;
   background: rgba(255, 255, 255, 0.5);
+  border: 1rpx solid rgba(120, 140, 180, 0.25);
   border-radius: 8rpx;
   overflow: hidden;
 }

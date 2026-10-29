@@ -1,7 +1,8 @@
 const { computeLayout, instantiateTree } = require("../../core/tree");
 
-// 缩略图基准尺寸（px）
-const THUMB_BASE = 96;
+// 缩略图统一方框尺寸（px）：所有缩略图画布宽高一致，
+// 布局预览按模板外框比例适配后在方框内居中
+const THUMB_BOX = 72;
 const THUMB_GAP = 3;
 
 Component({
@@ -38,20 +39,13 @@ Component({
     buildThumbs() {
       const layouts = this.data.layouts || [];
       const thumbs = layouts.map(tpl => {
-        // 缩略图按模板 aspect 适配到基准框内
-        const aspect = tpl.aspect || 1;
-        let w = THUMB_BASE;
-        let h = Math.round(THUMB_BASE / aspect);
-        if (h > THUMB_BASE) {
-          h = THUMB_BASE;
-          w = Math.round(THUMB_BASE * aspect);
-        }
+        // 格子直接铺满统一方框（缩略图只表达布局结构，不表达外框比例）
         const tree = instantiateTree(tpl.tree);
-        const out = computeLayout(tree, THUMB_GAP, w, h);
+        const out = computeLayout(tree, THUMB_GAP, THUMB_BOX, THUMB_BOX);
         return {
           name: tpl.name,
-          w,
-          h,
+          w: THUMB_BOX,
+          h: THUMB_BOX,
           cells: out.leafFrames.map(f => ({
             left: Math.round(f.left),
             top: Math.round(f.top),

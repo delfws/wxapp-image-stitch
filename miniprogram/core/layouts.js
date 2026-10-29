@@ -39,6 +39,10 @@ module.exports = [
   { count: 2, name: "左小右大", aspect: 1, tree: T("row", [0.382, 0.618], Ls(2)) },
   { count: 2, name: "上大下小", aspect: 1, tree: T("col", [0.618, 0.382], Ls(2)) },
   { count: 2, name: "上小下大", aspect: 1, tree: T("col", [0.382, 0.618], Ls(2)) },
+  { count: 2, name: "左宽右窄", aspect: 1, tree: T("row", [2 / 3, 1 / 3], Ls(2)) },
+  { count: 2, name: "左窄右宽", aspect: 1, tree: T("row", [1 / 3, 2 / 3], Ls(2)) },
+  { count: 2, name: "上宽下窄", aspect: 1, tree: T("col", [2 / 3, 1 / 3], Ls(2)) },
+  { count: 2, name: "上窄下宽", aspect: 1, tree: T("col", [1 / 3, 2 / 3], Ls(2)) },
 
   // ===== 3 张 =====
   { count: 3, name: "三竖列", aspect: 1, tree: T("row", eq(3), Ls(3)) },
@@ -49,6 +53,11 @@ module.exports = [
   { count: 3, name: "左二右一", aspect: 1, tree: T("row", [0.5, 0.5], [T("col", [0.5, 0.5], Ls(2)), L()]) },
   { count: 3, name: "上大下二小", aspect: 4 / 3, tree: T("col", [0.62, 0.38], [L(), T("row", eq(2), Ls(2))]) },
   { count: 3, name: "左大右二小", aspect: 3 / 4, tree: T("row", [0.62, 0.38], [L(), T("col", eq(2), Ls(2))]) },
+  { count: 3, name: "中宽侧窄", aspect: 1, tree: T("row", [0.28, 0.44, 0.28], Ls(3)) },
+  { count: 3, name: "中高侧矮", aspect: 1, tree: T("col", [0.28, 0.44, 0.28], Ls(3)) },
+  { count: 3, name: "左一右二(宽)", aspect: 3 / 4, tree: T("row", [0.618, 0.382], [L(), T("col", eq(2), Ls(2))]) },
+  { count: 3, name: "上双下大", aspect: 4 / 3, tree: T("col", [0.38, 0.62], [T("row", eq(2), Ls(2)), L()]) },
+  { count: 3, name: "左双右大", aspect: 4 / 3, tree: T("row", [0.38, 0.62], [T("col", eq(2), Ls(2)), L()]) },
 
   // ===== 4 张 =====
   {
@@ -62,6 +71,12 @@ module.exports = [
   { count: 4, name: "上一下三", aspect: 3 / 4, tree: T("col", [0.4, 0.6], [L(), T("row", eq(3), Ls(3))]) },
   { count: 4, name: "上三下一", aspect: 3 / 4, tree: T("col", [0.6, 0.4], [T("row", eq(3), Ls(3)), L()]) },
   { count: 4, name: "上大下三小", aspect: 4 / 3, tree: T("col", [0.62, 0.38], [L(), T("row", eq(3), Ls(3))]) },
+  { count: 4, name: "上三小下大", aspect: 4 / 3, tree: T("col", [0.62, 0.38], [T("row", eq(3), Ls(3)), L()]) },
+  { count: 4, name: "左三小右大", aspect: 4 / 3, tree: T("row", [0.38, 0.62], [T("col", eq(3), Ls(3)), L()]) },
+  { count: 4, name: "田字左宽", aspect: 1, tree: T("col", eq(2), [T("row", [0.618, 0.382], Ls(2)), T("row", [0.618, 0.382], Ls(2))]) },
+  { count: 4, name: "田字上高", aspect: 1, tree: T("col", [0.618, 0.382], [T("row", eq(2), Ls(2)), T("row", eq(2), Ls(2))]) },
+  { count: 4, name: "双列左宽", aspect: 1, tree: twoCols(2, 2, 0.618) },
+  { count: 4, name: "上一中二下一", aspect: 3 / 4, tree: threeRows(1, 2, 1) },
 
   // ===== 5 张 =====
   { count: 5, name: "左一右四", aspect: 1, tree: bigLeft([2, 2], 0.5) },
@@ -74,6 +89,11 @@ module.exports = [
   { count: 5, name: "左三右二", aspect: 1, tree: twoCols(3, 2, 0.55) },
   { count: 5, name: "五竖列", aspect: 1, tree: T("row", eq(5), Ls(5)) },
   { count: 5, name: "五横行", aspect: 1, tree: T("col", eq(5), Ls(5)) },
+  { count: 5, name: "左大右四小(宽)", aspect: 4 / 3, tree: bigLeft([2, 2], 0.618) },
+  { count: 5, name: "上一中三下一", aspect: 3 / 4, tree: threeRows(1, 3, 1) },
+  { count: 5, name: "上二中一下二", aspect: 1, tree: threeRows(2, 1, 2) },
+  { count: 5, name: "上二中二下一", aspect: 3 / 4, tree: threeRows(2, 2, 1) },
+  { count: 5, name: "上一下二中二", aspect: 3 / 4, tree: threeRows(1, 2, 2) },
 
   // ===== 6 张 =====
   { count: 6, name: "两行三列", aspect: 4 / 3, tree: twoRows(3, 3, 0.5) },
@@ -85,6 +105,11 @@ module.exports = [
   { count: 6, name: "上五下一", aspect: 1, tree: T("col", [0.5, 0.5], [T("row", eq(5), Ls(5)), L()]) },
   { count: 6, name: "左二右四", aspect: 1, tree: twoCols(2, 4, 0.4) },
   { count: 6, name: "左四右二", aspect: 1, tree: twoCols(4, 2, 0.6) },
+  { count: 6, name: "上一中二下三", aspect: 1, tree: threeRows(1, 2, 3) },
+  { count: 6, name: "上三中二下一", aspect: 1, tree: threeRows(3, 2, 1) },
+  { count: 6, name: "上二下四", aspect: 3 / 4, tree: twoRows(2, 4, 0.38) },
+  { count: 6, name: "上四下二", aspect: 4 / 3, tree: twoRows(4, 2, 0.62) },
+  { count: 6, name: "左大右五小(宽)", aspect: 4 / 3, tree: bigLeft([3, 2], 0.618) },
 
   // ===== 7 张 =====
   { count: 7, name: "一大六小", aspect: 1, tree: bigLeft([3, 3], 0.45) },
@@ -96,6 +121,11 @@ module.exports = [
   { count: 7, name: "上二中二下三", aspect: 1, tree: threeRows(2, 2, 3) },
   { count: 7, name: "左三右四", aspect: 1, tree: twoCols(3, 4, 0.45) },
   { count: 7, name: "左四右三", aspect: 1, tree: twoCols(4, 3, 0.55) },
+  { count: 7, name: "左大右六小(三排)", aspect: 1, tree: bigLeft([2, 2, 2], 0.45) },
+  { count: 7, name: "上大下六小(三排)", aspect: 4 / 3, tree: bigTop([2, 2, 2], 0.45) },
+  { count: 7, name: "上二中三下二", aspect: 1, tree: threeRows(2, 3, 2) },
+  { count: 7, name: "上一中二下四", aspect: 3 / 4, tree: threeRows(1, 2, 4) },
+  { count: 7, name: "上四中二下一", aspect: 4 / 3, tree: threeRows(4, 2, 1) },
 
   // ===== 8 张 =====
   { count: 8, name: "两行四列", aspect: 4 / 3, tree: twoRows(4, 4, 0.5) },
@@ -116,6 +146,11 @@ module.exports = [
   { count: 8, name: "上三下五", aspect: 1, tree: twoRows(3, 5, 0.42) },
   { count: 8, name: "上五下三", aspect: 1, tree: twoRows(5, 3, 0.58) },
   { count: 8, name: "上二中四下二", aspect: 1, tree: threeRows(2, 4, 2) },
+  { count: 8, name: "上三中三下二", aspect: 1, tree: threeRows(3, 3, 2) },
+  { count: 8, name: "上二中三下三", aspect: 1, tree: threeRows(2, 3, 3) },
+  { count: 8, name: "左大右七小(三排)", aspect: 1, tree: bigLeft([2, 2, 3], 0.4) },
+  { count: 8, name: "上大下七小(三排)", aspect: 4 / 3, tree: bigTop([2, 3, 2], 0.4) },
+  { count: 8, name: "上四下四(宽)", aspect: 4 / 3, tree: twoRows(4, 4, 0.62) },
 
   // ===== 9 张 =====
   { count: 9, name: "九宫格", aspect: 1, tree: threeRows(3, 3, 3) },
@@ -127,5 +162,10 @@ module.exports = [
   { count: 9, name: "左四右五", aspect: 1, tree: twoCols(4, 5, 0.45) },
   { count: 9, name: "左五右四", aspect: 1, tree: twoCols(5, 4, 0.55) },
   { count: 9, name: "上四中二下三", aspect: 1, tree: threeRows(4, 2, 3) },
-  { count: 9, name: "上二中三下四", aspect: 1, tree: threeRows(2, 3, 4) }
+  { count: 9, name: "上二中三下四", aspect: 1, tree: threeRows(2, 3, 4) },
+  { count: 9, name: "上一中四下四", aspect: 1, tree: threeRows(1, 4, 4) },
+  { count: 9, name: "上四中四下一", aspect: 1, tree: threeRows(4, 4, 1) },
+  { count: 9, name: "上三下六", aspect: 3 / 4, tree: twoRows(3, 6, 0.35) },
+  { count: 9, name: "左三右六", aspect: 1, tree: twoCols(3, 6, 0.35) },
+  { count: 9, name: "左大右八小(三排)", aspect: 1, tree: bigLeft([2, 3, 3], 0.4) }
 ];
